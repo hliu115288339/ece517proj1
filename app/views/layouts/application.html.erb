@@ -1,14 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Ece517proj1</title>
+  <title>NCSU ECE517 Project 1</title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 </head>
+
 <body>
 
+<!--<p align = "right">-->
+    <!--username-->
+<!--</p>-->
+
+<!--<p>-->
+  <!--<%= "search" %>-->
+<!--</p>-->
+
 <%= yield %>
+
+<p>
+    <%= link_to "Show all users", users_all_url %>
+    <%= link_to "Show all categories", categories_url %>
+    <%= link_to "Show all posts", posts_url %>
+</p>
 
 </body>
 </html>

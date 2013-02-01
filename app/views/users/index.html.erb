@@ -1,0 +1,12 @@
+<% @page_title = "UserAuth | Login" -%>
+<div class= "Sign_Form">
+  <h1>Log in</h1>
+  <p>Username or Email:</br> <%= text_field_tag :username_or_email %></p>
+  <p>Password:</br> <%= password_field_tag :login_password %></p>
+  <%= submit_tag("Log In") %>
+</div>
+<%= link_to 'New User', new_user_path %>
+<br>
+
+
+
