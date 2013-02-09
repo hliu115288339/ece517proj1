@@ -1,6 +1,14 @@
 Ece517proj1::Application.routes.draw do
 
-  match 'users/all', :controller => 'users', :action => 'all'
+  resources :votes
+
+
+  match 'users/all', controller: 'users', action: 'index'
+  match '/signup', controller: 'users', action: 'new'
+  match '/login', controller: 'sessions', action: 'new'
+  match '/logout', controller: 'sessions', action: 'destroy'
+
+  resources :sessions
 
   resources :comments
 
@@ -60,7 +68,7 @@ Ece517proj1::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-   root :to => 'users#index'
+   root :to => "sessions#new"
 
   # See how all your routes lay out with "rake routes"
 

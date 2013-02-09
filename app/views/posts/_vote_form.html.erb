@@ -1,0 +1,14 @@
+<div id="vote_form">
+
+  <% if current_user?(@post.user) %>
+      <%= link_to "# users voted", '#' %>
+  <% else %>
+      <% if current_user.voted?(@post) %>
+          <%= link_to "# users and you voted", '#' %>
+          <%= render 'unvote' %>
+      <% else %>
+          <%= link_to "# users voted", '#' %>
+          <%= render 'vote' %>
+      <% end %>
+  <% end %>
+</div>

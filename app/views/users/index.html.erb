@@ -1,12 +1,30 @@
-<% @page_title = "UserAuth | Login" -%>
-<div class= "Sign_Form">
-  <h1>Log in</h1>
-  <p>Username or Email:</br> <%= text_field_tag :username_or_email %></p>
-  <p>Password:</br> <%= password_field_tag :login_password %></p>
-  <%= submit_tag("Log In") %>
-</div>
-<%= link_to 'New User', new_user_path %>
+<% @page_title = "Listing all users" -%>
 <br>
+
+<h1>Listing all users</h1>
+
+<table>
+  <tr>
+    <th>Username</th>
+    <th>Email</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+  <% @users.each do |user| %>
+      <tr>
+        <td><%= link_to user.username, user %></td>
+        <td><%= user.email %></td>
+        <% if current_user?(user) || current_user.admin? %>
+            <td><%= link_to 'Edit', edit_user_path(user) %></td>
+            <td><%= link_to 'Delete', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% end %>
+      </tr>
+  <% end %>
+</table>
+
+<br />
 
 
 

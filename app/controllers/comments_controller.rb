@@ -1,4 +1,5 @@
 class CommentsController < ApplicationController
+  include SessionsHelper
   # GET /comments
   # GET /comments.json
   def index

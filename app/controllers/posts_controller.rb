@@ -1,6 +1,10 @@
 class PostsController < ApplicationController
-  # GET /posts
-  # GET /posts.json
+  include SessionsHelper
+
+  before_filter :signed_in_user
+  before_filter :correct_user,   only: [:edit, :destroy]
+
+  #show all posts
   def index
     @posts = Post.all
 
@@ -32,15 +36,8 @@ class PostsController < ApplicationController
     end
   end
 
-  # GET /posts/1/edit
-  def edit
-    @post = Post.find(params[:id])
-  end
-
-  # POST /posts
-  # POST /posts.json
   def create
-    @post = Post.new(params[:post])
+    @post = current_user.posts.build(params[:post])
 
     respond_to do |format|
       if @post.save
@@ -52,6 +49,14 @@ class PostsController < ApplicationController
       end
     end
   end
+
+  # GET /posts/1/edit
+  def edit
+    @post = Post.find(params[:id])
+  end
+
+  # POST /posts
+  # POST /posts.json
 
   # PUT /posts/1
   # PUT /posts/1.json
@@ -76,8 +81,23 @@ class PostsController < ApplicationController
     @post.destroy
 
     respond_to do |format|
-      format.html { redirect_to posts_url }
+      format.html { redirect_to root_url }
       format.json { head :no_content }
     end
   end
+
+  private
+
+    def signed_in_user
+      if !signed_in?
+        flash.now[:error] = "Please sign in first."
+        redirect_to login_path
+      end
+    end
+
+    def correct_user
+      @post = current_user.post.find_by_id(params[:id])
+      flash[:error] = "this post does not belong to you"
+      redirect_to root_url if @post.nil? unless current_user.admin
+    end
 end

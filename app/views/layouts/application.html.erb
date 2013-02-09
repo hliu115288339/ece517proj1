@@ -1,29 +1,28 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>NCSU ECE517 Project 1</title>
-  <%= stylesheet_link_tag    "application", :media => "all" %>
-  <%= javascript_include_tag "application" %>
-  <%= csrf_meta_tags %>
-</head>
-
+<%= render 'layouts/header' %>
 <body>
+  <% if flash[:error] %>
+    <div id="error_explanation" xmlns="http://www.w3.org/1999/html">
+      <h2><%= flash[:error] %></h2>
+    </div>
+  <% end %>
 
-<!--<p align = "right">-->
-    <!--username-->
-<!--</p>-->
+  <% if flash[:notice] %>
+    <div id="notice">
+      <h2><%= flash[:notice] %></h2>
+    </div>
+  <% end %>
 
-<!--<p>-->
-  <!--<%= "search" %>-->
-<!--</p>-->
-
-<%= yield %>
-
-<p>
-    <%= link_to "Show all users", users_all_url %>
-    <%= link_to "Show all categories", categories_url %>
-    <%= link_to "Show all posts", posts_url %>
-</p>
-
+  <div class="container">
+    <%= yield %>
+  </div>
 </body>
+
+<%= render 'layouts/footer' %>
+<%= debug(params) if Rails.env.development?%>
+
 </html>
+
+
+

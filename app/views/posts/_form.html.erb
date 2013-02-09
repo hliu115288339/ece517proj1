@@ -16,8 +16,12 @@
     <%= f.text_field :title %>
   </div>
   <div class="field">
+    <%= f.label :category %><br />
+    <%= select("post", "category_id", Category.find(:all).collect{ |c| [ c.name, c.id] }) %>
+  </div>
+  <div class="field">
     <%= f.label :content %><br />
-    <%= f.text_field :content %>
+    <%= f.text_area :content %>
   </div>
   <div class="actions">
     <%= f.submit %>

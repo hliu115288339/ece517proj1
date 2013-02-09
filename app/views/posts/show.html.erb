@@ -5,10 +5,18 @@
   <%= @post.title %>
 </p>
 
+<%= render 'vote_form' if signed_in? %>
+
 <p>
-  <b>Content:</b>
+  <b>Author:</b>
+  <%= link_to @post.user.username, @post.user %>
+</p>
+
+<p>
+  <b>Content:</b> <br/>
   <%= @post.content %>
 </p>
+
 
 
 <%= link_to 'Edit', edit_post_path(@post) %> |

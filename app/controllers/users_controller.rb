@@ -1,6 +1,9 @@
 class UsersController < ApplicationController
-  # GET /users
-  # GET /users.json
+  before_filter :signed_in_user, only: [:edit, :update, :destroy]
+  before_filter :correct_user, only: [:edit, :update]
+  before_filter :admin_user, only: [:destroy]
+
+  #show all user
   def index
     @users = User.all
 
@@ -10,19 +13,7 @@ class UsersController < ApplicationController
     end
   end
 
-  # GET /users/all
-  # GET /users/all.json
-  def all
-    @users = User.all
-
-    respond_to do |format|
-      format.html # all.html.erb
-      format.json { render json: @users }
-    end
-  end
-
-  # GET /users/1
-  # GET /users/1.json
+  #show current user info
   def show
     @user = User.find(params[:id])
 
@@ -32,8 +23,7 @@ class UsersController < ApplicationController
     end
   end
 
-  # GET /users/new
-  # GET /users/new.json
+  #create user
   def new
     @user = User.new
 
@@ -43,18 +33,12 @@ class UsersController < ApplicationController
     end
   end
 
-  # GET /users/1/edit
-  def edit
-    @user = User.find(params[:id])
-  end
-
-  # POST /users
-  # POST /users.json
   def create
     @user = User.new(params[:user])
 
     respond_to do |format|
       if @user.save
+        sign_in @user
         format.html { redirect_to @user, notice: 'User was successfully created.' }
         format.json { render json: @user, status: :created, location: @user }
       else
@@ -64,8 +48,11 @@ class UsersController < ApplicationController
     end
   end
 
-  # PUT /users/1
-  # PUT /users/1.json
+  # edit user
+  def edit
+    @user = User.find(params[:id])
+  end
+
   def update
     @user = User.find(params[:id])
 
@@ -80,58 +67,31 @@ class UsersController < ApplicationController
     end
   end
 
-  # DELETE /users/1
-  # DELETE /users/1.json
+  #delete user
   def destroy
     @user = User.find(params[:id])
     @user.destroy
 
-    respond_to do |format|
-      format.html { redirect_to users_url }
-      format.json { head :no_content }
-    end
-  end
-
-  def login
-    respond_to do
-      index.html # all.html.erb
-      index.json #format.json { render json: @users }
-    end
-  end
-
-  def find_by_email(input)
-
 
   end
 
-  def find_by_username(input)
-
-  end
-
-  def authenticate(username_or_email="", login_password="")
-    if  EMAIL_REGEX.match(username_or_email)
-      user = find_by_email(username_or_email)
-    else
-      user = find_by_username(username_or_email)
+  private
+    def signed_in_user
+      if !signed_in?
+        flash.now[:error] = "Please sign in first."
+        redirect_to login_path
+      end
     end
 
-    if user && (login_password == user.password)
-      return user
-    else
-      return false
+    def correct_user
+      @user = User.find(params[:id])
+      if !current_user?(@user)
+        flash.now[:error] = "You do not have the permission to perform this operation"
+        redirect_to users_path
+      end
     end
-  end
 
-  def login_attempt
-    authorized_user = User.authenticate(params[:username_or_email],params[:login_password])
-    if authorized_user
-      flash[:notice] = "Wow Welcome again, you logged in as #{authorized_user.username}"
-      redirect_to(:action => 'home')
-    else
-      flash[:notice] = "Invalid Username or Password"
-      flash[:color]= "invalid"
-      render "login"
+    def admin_user
+      redirect_to(root_path) unless current_user.admin?
     end
-  end
-
 end
