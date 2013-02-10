@@ -1,0 +1,21 @@
+<div id="vote_form">
+  <% if signed_in? %>
+      <% if current_user?(object.user) %>
+          <%= link_to object.votes.count, '#' %>
+          people liked this post<br/>
+      <% else %>
+          <% if current_user.voted?(object) %>
+              <%= link_to object.votes.count-1, '#' %>
+              people and you liked this post<br/>
+              <%= render 'votes/unvote' %>
+          <% else %>
+              <%= link_to object.votes.count, '#' %>
+              people liked this post<br/>
+              <%= render 'votes/vote' %>
+          <% end %>
+      <% end %>
+  <% else %>
+      <%= link_to object.votes.count, '#' %>
+      people liked this post<br/>
+  <% end %>
+</div>

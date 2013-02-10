@@ -1,28 +1,21 @@
 <!DOCTYPE html>
 <html>
-<%= render 'layouts/header' %>
+<head>
+  <title><%= full_title(yield(:title)) %></title>
+  <%= stylesheet_link_tag    "application", media: "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+  <%= render 'layouts/shim' %>
+</head>
 <body>
-  <% if flash[:error] %>
-    <div id="error_explanation" xmlns="http://www.w3.org/1999/html">
-      <h2><%= flash[:error] %></h2>
-    </div>
+<%= render 'layouts/header' %>
+<div class="container">
+  <% flash.each do |key, value| %>
+      <%= content_tag(:div, value, class: "alert alert-#{key}") %>
   <% end %>
-
-  <% if flash[:notice] %>
-    <div id="notice">
-      <h2><%= flash[:notice] %></h2>
-    </div>
-  <% end %>
-
-  <div class="container">
-    <%= yield %>
-  </div>
+  <%= yield %>
+  <%= render 'layouts/footer' %>
+  <%= debug(params) if Rails.env.development? %>
+</div>
 </body>
-
-<%= render 'layouts/footer' %>
-<%= debug(params) if Rails.env.development?%>
-
 </html>
-
-
-

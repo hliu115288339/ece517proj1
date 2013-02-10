@@ -5,14 +5,13 @@ class VotesController < ApplicationController
     @post = Post.find(params[:vote][:post_id])
     @post.vote!(current_user)
 
-    redirect_to @post
+    respond_with @post
   end
 
   def destroy
     @post = Vote.find(params[:id]).post
     @post.unvote!(current_user)
 
-    redirect_to @post
-
+    respond_with @post
   end
 end

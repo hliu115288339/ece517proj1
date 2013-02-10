@@ -1,8 +1,44 @@
-<p id="notice"><%= notice %></p>
+<h1><%= @category.name %></h1>
 
-<p>
-  <h1><%= @category.name %></b> </h1>
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Created by</th>
+    <th>Created at</th>
+    <th>Updated at</th>
+  </tr>
+
+  <% @category.posts.each do |post| %>
+    <tr>
+      <% if post.parent_post_id.nil? %>
+        <td>
+          <%= link_to post.title, post %>
+        </td>
+
+        <td>
+          <%= link_to post.user.username, post.user %>
+        </td>
+
+        <td>
+          <%= distance_of_time_in_words_to_now post.created_at %> ago
+        </td>
+
+        <td>
+          <%= distance_of_time_in_words_to_now post.updated_at %>
+          ago
+        </td>
+
+        <% if signed_in? %>
+            <% if current_user.admin? %>
+              <td><%= link_to 'Edit', edit_post_path(post) %></td>
+              <td><%= link_to 'Delete', post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+            <% end %>
+        <% end %>
+      <% end %>
+    </tr>
+  <% end %>
 </p>
 
-<%= link_to 'Edit', edit_category_path(@category) %> |
-<%= link_to 'Back', categories_path %>
+</table><br/>
+
+<%= link_to 'New Post', new_post_path %>

@@ -1,0 +1,35 @@
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+  <tr>
+    <td>
+      <%= link_to object.user.username, object.user %><br/>
+      <%= render 'votes/vote_form', object: object %>
+      <span class="timestamp"><small>
+        Posted <%= time_ago_in_words(object.created_at) %> ago.
+      </small></span>
+
+    </td>
+    <td>
+      <%= object.content %><br />
+      <% if signed_in? %>
+          <% if current_user?(object.user) %>
+              <p>
+                <%= link_to "Edit", edit_post_path(object) %> |
+                <%= link_to "Delete", object, :confirm => 'Are you sure?', :method => :delete %>
+              </p>
+          <% end %>
+      <% end %>
+      <% object.comments.each do |post| %>
+          <%= render 'post', object: post%>
+      <% end %>
+
+      <%= link_to 'new comment', '#' %>
+    </td>
+  </tr>
+</table>
+

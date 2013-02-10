@@ -1,5 +1,5 @@
 <%= form_for(current_user.votes.find_by_post_id(@post),
              html: { method: :delete },
              remote: true) do |f| %>
-    <%= f.submit "unvote" %>
+    <%= f.submit "unlike", class: "btn btn-large btn-primary"%>
 <% end %>

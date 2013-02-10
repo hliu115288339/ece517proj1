@@ -7,6 +7,7 @@ class CreatePosts < ActiveRecord::Migration
 
       t.references :user
       t.references :category
+      t.references :parent_post
 
       t.timestamps
     end

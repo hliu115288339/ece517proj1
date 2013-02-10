@@ -1,7 +1,6 @@
 class PostsController < ApplicationController
   include SessionsHelper
 
-  before_filter :signed_in_user
   before_filter :correct_user,   only: [:edit, :destroy]
 
   #show all posts

@@ -1,18 +1,16 @@
-<%= form_for(:session, url: sessions_path) do |f| %>
+<div class="row">
+  <div class="span6 offset3">
+    <%= form_for(:session, url: sessions_path) do |f| %>
 
-    <div class="field">
-      <%=  f.label :username_or_email %><br/>
-      <%=  f.text_field :username_or_email %>
-    </div>
+        <%= f.label :username_or_email %>
+        <%= f.text_field :username_or_email %>
 
-    <div class="field">
-      <%= f.label :password %><br/>
-      <%= f.password_field :password %>
-    </div>
+        <%= f.label :password %>
+        <%= f.password_field :password %>
+        <%= f.submit "Sign in", class: "btn btn-large btn-primary" %>
 
-    <div class="actions">
-        <%= f.submit "Log in" %>
-    </div>
+    <% end %>
 
-    <p>New user? <%= link_to "Sign up!", signup_path %></p>
-<% end %>
+    <p>New user? <%= link_to "Sign up now!", signup_path %></p>
+  </div>
+</div>
