@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
-  before_filter :signed_in_user, only: [:edit, :update, :destroy]
-  before_filter :correct_user, only: [:edit, :update]
-  before_filter :admin_user, only: [:destroy]
+  before_filter :signed_in_user, only: [:edit, :update, :destroy, :promote, :demote]
+  before_filter :correct_user,   only: [:edit, :update, :destroy]
+  before_filter :admin_user,     only: [:promote, :demote]
 
   #show all user
   def index
@@ -72,26 +72,52 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @user.destroy
 
+    respond_to do |format|
+      format.html { redirect_to root_url }
+      format.json { head :no_content }
+    end
+  end
+
+  def promote
+    respond_to do |format|
+      if User.find(params[:id]).update_attribute(:admin, true)
+        format.html { redirect_to users_all_path, notice: 'User was successfully promoted to admin.' }
+        format.json { head :no_content }
+      else
+        format.html { redirect_to users_all_path, notice: 'Fail to update user.' }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
+    end
 
   end
 
-  private
-    def signed_in_user
-      if !signed_in?
-        flash.now[:error] = "Please sign in first."
-        redirect_to login_path
+  def demote
+    respond_to do |format|
+      if User.find(params[:id]).update_attribute(:admin, false)
+        format.html { redirect_to users_all_path, notice: 'User was successfully demoted.' }
+        format.json { head :no_content }
+      else
+        format.html { redirect_to users_all_path, notice: 'Fail to update user.' }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
+  end
 
+  def liked
+    @user = User.find(params[:id])
+    @title = "Posts that #{@user.username} liked"
+
+    render 'show_liked'
+  end
+
+  private
     def correct_user
       @user = User.find(params[:id])
+      #if the @user != current_user
+      #  or if @user.admin != true
       if !current_user?(@user)
-        flash.now[:error] = "You do not have the permission to perform this operation"
-        redirect_to users_path
+        redirect_to root_path, notice: "You do not have the permission to perform this operation" unless current_user.admin
       end
     end
 
-    def admin_user
-      redirect_to(root_path) unless current_user.admin?
-    end
 end

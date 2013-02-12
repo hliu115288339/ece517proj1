@@ -7,14 +7,41 @@
   <tr>
     <th>Username</th>
     <th>Email</th>
+    <th>Created at</th>
+    <th>Update at</th>
+    <th>Credential</th>
   </tr>
 
   <% @users.each do |user| %>
       <tr>
         <td><%= link_to user.username, user %></td>
         <td><%= user.email %></td>
+        <td><%= time_ago_in_words user.created_at %> ago.</td>
+        <td><%= time_ago_in_words user.updated_at %> ago.</td>
+        <td>
+          <% if user.admin? %>
+            admin
+            <% if signed_in? %>
+                <% if current_user.admin? %>
+                    <td>
+                      <%= link_to('revoke', {:controller => 'users', :action => 'demote', :id => user.id}) unless current_user?(user) %>
+                    </td>
+                <% end %>
+            <% end %>
+          <% else %>
+            normal user
+            <% if signed_in? %>
+                <% if current_user.admin? %>
+                    <td>
+                      <%= link_to('promote', {:controller => 'users', :action => 'promote', :id => user.id} )unless current_user?(user) %>
+                    </td>
+                <% end %>
+            <% end %>
+          <% end %>
+        </td>
+
         <% if signed_in? %>
-            <% if current_user?(user) || current_user.admin? %>
+            <% if current_user?(user) or current_user.admin? %>
                 <td><%= link_to 'Edit', edit_user_path(user) %></td>
                 <td><%= link_to 'Delete', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
             <% end %>

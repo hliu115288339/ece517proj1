@@ -4,4 +4,5 @@ class ApplicationController < ActionController::Base
   include UsersHelper
   include PostsHelper
   include CategoriesHelper
+
 end

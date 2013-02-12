@@ -21,13 +21,6 @@ module SessionsHelper
     user == current_user
   end
 
-  def signed_in_user
-    unless signed_in?
-      store_location
-      redirect_to login_url, notice: "Please log in."
-    end
-  end
-
   def sign_out
     self.current_user = nil
     cookies.delete(:remember_token)
@@ -41,5 +34,16 @@ module SessionsHelper
     redirect_to(session[:return_to] || default)
     session.delete(:return_to)
   end
-  #TODO: add admin
+
+  def signed_in_user
+    if !signed_in?
+      redirect_to login_path, notice: "Please sign in first."
+    end
+  end
+
+  def admin_user
+    if !current_user.admin?
+      redirect_to root_path, notice: "You do not have the permission to perform this operation"
+    end
+  end
 end

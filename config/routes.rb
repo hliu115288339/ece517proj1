@@ -1,16 +1,23 @@
 Ece517proj1::Application.routes.draw do
 
-  resources :votes
-
-
   match 'users/all', controller: 'users', action: 'index'
   match '/signup', controller: 'users', action: 'new'
   match '/login', controller: 'sessions', action: 'new'
   match '/logout', controller: 'sessions', action: 'destroy'
 
-  resources :sessions
+  match '/demote', controller: 'users', action: 'demote'
+  match '/promote', controller: 'users', action: 'promote'
 
-  resources :comments
+  match '/like', controller: 'posts', action: 'vote'
+  match '/unlike', controller: 'posts', action: 'unvote'
+
+  match '/new_comment', controller: 'posts', action: 'new_comment'
+  match '/show_liked', controller: 'posts', action: 'show_liked'
+
+
+  resources :votes
+
+  resources :sessions
 
   resources :categories
 

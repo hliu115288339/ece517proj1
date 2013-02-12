@@ -1,13 +1,9 @@
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
   <tr>
     <td>
-      <%= link_to object.user.username, object.user %><br/>
+      <div>
+        <h4><%= link_to object.user.username, object.user %></h4>
+      </div>
+
       <%= render 'votes/vote_form', object: object %>
       <span class="timestamp"><small>
         Posted <%= time_ago_in_words(object.created_at) %> ago.
@@ -15,21 +11,32 @@
 
     </td>
     <td>
+      <h3><%= object.title %></h3>
       <%= object.content %><br />
       <% if signed_in? %>
-          <% if current_user?(object.user) %>
+          <% if current_user?(object.user) or current_user.admin? %>
               <p>
                 <%= link_to "Edit", edit_post_path(object) %> |
                 <%= link_to "Delete", object, :confirm => 'Are you sure?', :method => :delete %>
               </p>
           <% end %>
       <% end %>
-      <% object.comments.each do |post| %>
-          <%= render 'post', object: post%>
+      <% if !object.comments.empty? %>
+          <table width="100%">
+            <tr>
+              <th width="20%"></th>
+              <th width="80%"></th>
+            </tr>
+
+            <% object.comments.each do |post| %>
+              <%= render 'post', object: post%>
+            <% end %>
+          </table>
       <% end %>
 
-      <%= link_to 'new comment', '#' %>
+      <%= button_to 'New Comment', {controller: 'posts', action: 'new_comment', id: object.id}, class: "btn btn-small btn-primary" %>
+
     </td>
   </tr>
-</table>
+
 

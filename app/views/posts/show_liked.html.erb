@@ -1,0 +1,27 @@
+<% provide(:title, "liked #{@post.title}") %>
+
+<h1>
+  People Who Liked <%= link_to "#{@post.title}", @post %>
+</h1>
+
+<!--display all users that voted for this post-->
+<% if @post.votes.empty? %>
+    No one voted for this post
+<% else %>
+    <table>
+      <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Liked at</th>
+      </tr>
+
+      <% @post.votes.each do |vote| %>
+          <tr>
+            <td><%= link_to vote.user.username, vote.user %></td>
+            <td><%= vote.user.email %></td>
+            <td><%= time_ago_in_words vote.created_at %> ago</td>
+          </tr>
+      <% end %>
+    </table><br/>
+<% end %>
+

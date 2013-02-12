@@ -1,9 +1,51 @@
-<p id="notice"><%= notice %></p>
+<table>
+  <tr>
+    <th width="20%"></th>
+    <th width="80%"></th>
+  </tr>
 
-<h3><%= @post.title %></h3>
-<%= render 'post', object: @post%>
+  <tr>
+    <td>
+      <div>
+        <h4><%= link_to @post.user.username, @post.user %></h4>
+      </div>
+
+      <div>
+        <%= render 'votes/vote_form', object: @post %>
+      </div>
+
+      <div><span class="timestamp"><small>
+          Posted <%= time_ago_in_words(@post.created_at) %> ago.
+      </small></span></div>
+    </td>
+
+    <td>
+      <div>
+        <h3><%= @post.title %></h3>
+      </div>
+
+      <div>
+        <%= @post.content %>
+      </div>
+
+      <div>
+        <% if signed_in? %>
+            <% if current_user?(@post.user) or current_user.admin? %>
+                <p>
+                  <%= link_to "Edit", edit_post_path(@post) %> |
+                  <%= link_to "Delete", @post, :confirm => 'Are you sure?', :method => :delete %>
+                </p>
+            <% end %>
+        <% end %>
+      </div>
+    </td>
+  </tr>
+
+  <% @post.comments.each do |post| %>
+      <%= render 'post', object: post%>
+  <% end %>
+</table>
 
 
-<%= link_to 'Edit', edit_post_path(@post) %> |
-<%= link_to 'Back', posts_path %>
+  <%= button_to 'New Comment', {controller: 'posts', action: 'new_comment', id: @post.id}, class: "btn btn-small btn-primary" %>
 

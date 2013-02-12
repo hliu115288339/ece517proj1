@@ -16,7 +16,7 @@ class PostsController < ApplicationController
   # GET /posts/1
   # GET /posts/1.json
   def show
-    @post = Post.find(params[:id])
+    @post = root_post_of(Post.find(params[:id]))
 
     respond_to do |format|
       format.html # show.html.erb
@@ -35,11 +35,23 @@ class PostsController < ApplicationController
     end
   end
 
+  def new_comment
+    @post = Post.find(params[:id])
+    @comment = @post.comments.build
+
+    respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: @post }
+    end
+  end
+
   def create
     @post = current_user.posts.build(params[:post])
+    @root_post = root_post_of(@post)
 
     respond_to do |format|
       if @post.save
+        touch_updated_at(@post)
         format.html { redirect_to @post, notice: 'Post was successfully created.' }
         format.json { render json: @post, status: :created, location: @post }
       else
@@ -61,9 +73,11 @@ class PostsController < ApplicationController
   # PUT /posts/1.json
   def update
     @post = Post.find(params[:id])
+    @root_post = root_post_of(@post)
 
     respond_to do |format|
       if @post.update_attributes(params[:post])
+        touch_updated_at(@post)
         format.html { redirect_to @post, notice: 'Post was successfully updated.' }
         format.json { head :no_content }
       else
@@ -85,18 +99,65 @@ class PostsController < ApplicationController
     end
   end
 
-  private
+  def vote
+    @post = Post.find(params[:id])
+    @vote = @post.votes.build(user_id: current_user.id)
 
-    def signed_in_user
-      if !signed_in?
-        flash.now[:error] = "Please sign in first."
-        redirect_to login_path
+    respond_to do |format|
+      if @vote.save
+        touch_updated_at(@post)
+        format.html { redirect_to @post, notice: 'Successfully like the post.' }
+        format.json { head :no_content }
+      else
+        format.html { redirect_to @post, notice: 'Fail to like the post'}
+        format.json { render json: @post.errors, status: :unprocessable_entity }
       end
     end
 
+  end
+
+  def unvote
+    @post = Post.find(params[:id])
+    @vote = @post.votes.find_by_user_id(current_user.id)
+
+    respond_to do |format|
+      if @vote.destroy
+        touch_updated_at(@post)
+        format.html { redirect_to @post, notice: 'Successfully unlike the post.' }
+        format.json { head :no_content }
+      else
+        format.html { redirect_to @post, notice: 'Fail to unlike the post'}
+        format.json { render json: @post.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def show_liked
+    @post = Post.find(params[:id])
+  end
+
+  private
     def correct_user
-      @post = current_user.post.find_by_id(params[:id])
-      flash[:error] = "this post does not belong to you"
-      redirect_to root_url if @post.nil? unless current_user.admin
+      @post = current_user.posts.find_by_id(params[:id])
+      if @post.nil?
+        redirect_to root_url, notice: "this post does not belong to you" unless current_user.admin
+      end
+    end
+
+    def touch_updated_at(post)
+        current_post = post
+        current_post.touch(:updated_at)
+        while !current_post.parent_post_id.nil? do
+          current_post = Post.find_by_id(current_post.parent_post_id)
+          current_post.touch(:updated_at)
+        end
+    end
+
+    def root_post_of(post)
+      root_post = post
+      while !root_post.parent_post_id.nil? do
+        root_post = Post.find_by_id(root_post.parent_post_id)
+      end
+      root_post
     end
 end

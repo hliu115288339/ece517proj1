@@ -1,0 +1,33 @@
+<h2>
+  <% "Post that #{@post.username} Liked " %>
+</h2>
+
+<% if @user.votes.empty? %>
+    No liked post
+<% else %>
+    <table>
+      <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Category</th>
+        <th>Created at</th>
+        <th>Updated at</th>
+      </tr>
+
+      <% @user.votes.all do |vote| %>
+      <tr>
+        <td><%= link_to vote.post.title, post %></td>
+        <td><%= link_to vote.post.user.username, vote.post.user %></td>
+        <td><%= link_to vote.post.category.name, vote.post.category %></td>
+
+        <td><%= time_ago_in_words vote.post.created_at %> ago.</td>
+        <td><%= time_ago_in_words vote.post.updated_at %> ago.</td>
+      </tr>
+      <% end %>
+    </table><br/>
+<% end %>
+
+
+
+
+

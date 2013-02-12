@@ -3,6 +3,7 @@
 <table>
   <tr>
     <th>Name</th>
+    <th>Post Count</th>
     <th>Created at</th>
     <th>Updated at</th>
   </tr>
@@ -10,8 +11,11 @@
 <% @categories.each do |category| %>
   <tr>
     <td>
-      <h4><%= link_to category.name, category %></h4>
-      <small><%= category.posts.count %> posts</small><br/>
+      <%= link_to category.name, category %>
+    </td>
+
+    <td>
+      <%= category.posts.count %> posts
     </td>
 
     <td>
@@ -39,4 +43,8 @@
 
 <br />
 
-<%= link_to 'New Category', new_category_path %>
+<% if signed_in? %>
+    <% if current_user.admin?%>
+        <%= link_to 'New Category', new_category_path %>
+    <% end %>
+<% end %>

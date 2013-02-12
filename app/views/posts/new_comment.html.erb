@@ -1,34 +1,14 @@
-<%= form_for(comment = @post.comments.build) do |f| %>
+<%= form_for(@comment) do |f| %>
 
-    <tr>
-      <th></th>
-      <th></th>
-    </tr>
-
-    <tr>
-      <td>
-        <%= link_to @post.user.username, @post.user %><br/>
-        <%= render 'votes/vote_form', object: @post %>
-        <span class="timestamp"><small>
-          Posted <%= time_ago_in_words(@post.created_at) %> ago.
-        </small></span>
-      </td>
-
-      <td>
-        <%= @post.content %><br />
-      </td>
-    </tr>
-    </table>
-
-    <% comment.title = 're:'+@post.title %>
-    <% comment.parent_post_id = @post.id %>
-    <% comment.category_id = @post.category_id %>
+    <% @comment.title = 're:'+@post.title %>
+    <% @comment.parent_post_id = @post.id %>
+    <% @comment.category_id = @post.category_id %>
 
     <%=  f.hidden_field :title %>
     <%=  f.hidden_field :category_id %>
     <%=  f.hidden_field :parent_post_id %>
 
-    <%= comment.title %>
+    <h3><%= @comment.title %></h3>
     <%= f.text_area :content %>
     <%= f.submit "Create Comment", class: "btn btn-large btn-primary" %>
 

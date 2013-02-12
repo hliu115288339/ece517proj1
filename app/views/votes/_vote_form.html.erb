@@ -1,21 +1,20 @@
 <div id="vote_form">
   <% if signed_in? %>
       <% if current_user?(object.user) %>
-          <%= link_to object.votes.count, '#' %>
-          people liked this post<br/>
+          <%= link_to "#{object.votes.count} people voted", '#' %> <br />
       <% else %>
           <% if current_user.voted?(object) %>
-              <%= link_to object.votes.count-1, '#' %>
-              people and you liked this post<br/>
-              <%= render 'votes/unvote' %>
+              <%= link_to "you and #{object.votes.count-1} other people voted",
+                  {controller: 'posts', action: 'show_liked', id: object.id} %> <br />
+              <%= link_to 'unlike', {controller: 'posts', action: 'unvote', id: object.id} %>
           <% else %>
-              <%= link_to object.votes.count, '#' %>
-              people liked this post<br/>
-              <%= render 'votes/vote' %>
+              <%= link_to "#{object.votes.count} people voted",
+                          {controller: 'posts', action: 'show_liked', id: object.id} %><br />
+              <%= link_to 'like', {controller: 'posts', action: 'vote', id: object.id} %>
           <% end %>
       <% end %>
   <% else %>
-      <%= link_to object.votes.count, '#' %>
-      people liked this post<br/>
+      <%= link_to "#{object.votes.count} people voted",
+                  {controller: 'posts', action: 'show_liked', id: object.id} %><br />
   <% end %>
 </div>

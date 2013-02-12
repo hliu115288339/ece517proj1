@@ -25,12 +25,12 @@ class Post < ActiveRecord::Base
     votes.find_by_user_id(user.id)
   end
 
-  def vote!(user)
-    votes.create!(user_id: user.id)
-  end
-
-  def unvote!(user)
-    votes.find_by_user_id(user.id).destroy
-  end
+  #def vote!(user)
+  #  votes.create!(user_id: user.id)
+  #end
+  #
+  #def unvote!(user)
+  #  votes.find_by_user_id(user.id).destroy
+  #end
 
 end
