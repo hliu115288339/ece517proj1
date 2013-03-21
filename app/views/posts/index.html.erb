@@ -1,35 +1,9 @@
-<h1>Listing posts</h1>
+<% provide(:title, "Posts") %>
 
-<table>
-  <tr>
-    <th>Title</th>
-    <th>Author</th>
-    <th>Category</th>
-    <th>Created at</th>
-    <th>Updated at</th>
-  </tr>
+<h1>Listing Posts</h1>
 
-  <% @posts.each do |post| %>
-      <% if post.parent_post_id.nil? %>
-          <tr>
-            <td><%= link_to post.title, post %></td>
-            <td><%= link_to post.user.username, post.user %></td>
-            <td><%= link_to post.category.name, post.category %></td>
-
-            <td><%= time_ago_in_words post.created_at %> ago.</td>
-            <td><%= time_ago_in_words post.updated_at %> ago.</td>
-
-            <% if signed_in? %>
-                <% if current_user?(post.user) || current_user.admin? %>
-                    <td><%= link_to 'Edit', edit_post_path(post) %></td>
-                    <td><%= link_to 'Delete', post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-                <% end %>
-            <% end %>
-          </tr>
-      <% end %>
-  <% end %>
-</table><br/>
-
+<%=  render 'list_posts' %>
+<br/>
 <% if signed_in? %>
-    <%= link_to 'New Post', new_post_path %>
+    <%= link_to 'New Post', new_post_path, class: "btn btn-large btn-primary" %>
 <% end %>

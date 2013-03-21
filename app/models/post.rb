@@ -8,7 +8,7 @@ class Post < ActiveRecord::Base
   has_many :comments, class_name: "Post", foreign_key: "parent_post_id", :dependent => :destroy
   belongs_to :parent_post, class_name: "Post"
 
-  default_scope order: 'posts.updated_at DESC'
+  #default_scope order: 'posts.updated_at DESC'
 
   validates :title,
             presence: true,
@@ -32,5 +32,13 @@ class Post < ActiveRecord::Base
   #def unvote!(user)
   #  votes.find_by_user_id(user.id).destroy
   #end
+
+  def self.search(search)
+    if search
+      find(:all, :conditions => ['content LIKE ?', "%#{search}%"])
+    else
+      find(:all)
+    end
+  end
 
 end

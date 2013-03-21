@@ -10,7 +10,6 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:users)
   end
-
   test "should get new" do
     get :new
     assert_response :success
@@ -18,10 +17,8 @@ class UsersControllerTest < ActionController::TestCase
 
   test "should create user" do
     assert_difference('User.count') do
-      post :create, user: { email: @user.email, password: @user.password, username: @user.username }
+      post :create, user: {username: 'username', email: 'user@email.com', password: 'password', password_confirmation: 'password'}
     end
-
-    assert_redirected_to user_path(assigns(:user))
   end
 
   test "should show user" do
@@ -30,20 +27,23 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   test "should get edit" do
-    get :edit, id: @user
+    post :create, user: {username: 'username', email: 'user@email.com', password: 'password', password_confirmation: 'password'}
+    get :edit, id: User.find_by_username('username').id
     assert_response :success
   end
 
   test "should update user" do
-    put :update, id: @user, user: { email: @user.email, password: @user.password, username: @user.username }
-    assert_redirected_to user_path(assigns(:user))
+    post :create, user: {username: 'username', email: 'user@email.com', password: 'password', password_confirmation: 'password'}
+
+    put :update, id: User.find_by_username('username').id , user: {username: 'changed', email: 'changed@gmail.com', password: 'password', password_confirmation: 'password' }
+    assert_redirected_to User.find_by_username('username')
   end
 
   test "should destroy user" do
-    assert_difference('User.count', -1) do
-      delete :destroy, id: @user
-    end
+    post :create, user: {username: 'username', email: 'user@email.com', password: 'password', password_confirmation: 'password'}
 
-    assert_redirected_to users_path
+    assert_difference('User.count', -1) do
+      delete :destroy, id: User.find_by_username('username').id
+    end
   end
 end

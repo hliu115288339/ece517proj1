@@ -39,7 +39,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @user.save
         sign_in @user
-        format.html { redirect_to @user, notice: 'User was successfully created.' }
+        format.html { redirect_to root_path, notice: 'User was successfully created.' }
         format.json { render json: @user, status: :created, location: @user }
       else
         format.html { render action: "new" }
@@ -70,11 +70,15 @@ class UsersController < ApplicationController
   #delete user
   def destroy
     @user = User.find(params[:id])
-    @user.destroy
 
-    respond_to do |format|
-      format.html { redirect_to root_url }
-      format.json { head :no_content }
+    if current_user?(@user) && current_user.admin?
+      redirect_to root_path, notice: "admin can not delete self"
+    else
+      @user.destroy
+      respond_to do |format|
+        format.html { redirect_to root_url }
+        format.json { head :no_content }
+      end
     end
   end
 
@@ -116,7 +120,7 @@ class UsersController < ApplicationController
       #if the @user != current_user
       #  or if @user.admin != true
       if !current_user?(@user)
-        redirect_to root_path, notice: "You do not have the permission to perform this operation" unless current_user.admin
+        redirect_to root_path, notice: "You do not have the permission to perform this operation" unless current_user.admin?
       end
     end
 

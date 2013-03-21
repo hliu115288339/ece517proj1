@@ -40,6 +40,14 @@ class User < ActiveRecord::Base
     votes.find_by_post_id(post.id).destroy
   end
 
+  def self.search(search)
+    if search
+      find(:all, :conditions => ['username LIKE ?', "%#{search}%"])
+    else
+      find(:all)
+    end
+  end
+
   private
     def create_remember_token
       self.remember_token = SecureRandom.urlsafe_base64

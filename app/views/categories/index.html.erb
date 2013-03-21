@@ -1,11 +1,15 @@
-<h1>Listing categories</h1>
+<% provide(:title, "Categories") %>
+<h1>Listing Categories</h1>
 
+<% if @categories.empty? %>
+    No category <br/>
+<% else %>
 <table>
   <tr>
     <th>Name</th>
     <th>Post Count</th>
     <th>Created at</th>
-    <th>Updated at</th>
+    <th>Latest Activity</th>
   </tr>
 
 <% @categories.each do |category| %>
@@ -15,19 +19,18 @@
     </td>
 
     <td>
-      <%= category.posts.count %> posts
+      <%= category.posts.where(:parent_post_id => nil).count %> posts
     </td>
 
     <td>
-      <%= distance_of_time_in_words_to_now category.created_at %> ago
+      <%= time_ago_in_words category.created_at %> ago
     </td>
 
     <td>
       <% if category.posts.empty? %>
           No post created yet.
       <% else %>
-          <%= distance_of_time_in_words_to_now category.posts.first.updated_at %> ago by
-          <%= link_to category.posts.first.user.username, category.posts.first.user %>
+          <%= time_ago_in_words category.posts.all(:order => "updated_at DESC").first.updated_at %> ago by
       <% end %>
     </td>
 
@@ -41,10 +44,11 @@
 <% end %>
 </table>
 
-<br />
-
+<% end %>
+<br/>
 <% if signed_in? %>
     <% if current_user.admin?%>
-        <%= link_to 'New Category', new_category_path %>
+        <%= link_to 'New Category', new_category_path, class: "btn btn-large btn-primary" %>
     <% end %>
 <% end %>
+

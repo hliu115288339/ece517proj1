@@ -1,6 +1,11 @@
-<h1>Editing post</h1>
+<% provide(:title, "Edit Post") %>
 
-<%= render 'form' %>
+<% if @post.parent_post_id.nil? %>
+    <h1>Editing Post</h1>
+    <%= render 'post_form' %>
+<% else %>
+    <h1><%= "Editing #{@post.title}" %></h1>
+    <%= render 'comment_form' %>
+<% end %>
 
-<%= link_to 'Show', @post %> |
-<%= link_to 'Back', posts_path %>
+

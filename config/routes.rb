@@ -2,8 +2,8 @@ Ece517proj1::Application.routes.draw do
 
   match 'users/all', controller: 'users', action: 'index'
   match '/signup', controller: 'users', action: 'new'
-  match '/login', controller: 'sessions', action: 'new'
-  match '/logout', controller: 'sessions', action: 'destroy'
+  match '/signin', controller: 'sessions', action: 'new'
+  match '/signout', controller: 'sessions', action: 'destroy'
 
   match '/demote', controller: 'users', action: 'demote'
   match '/promote', controller: 'users', action: 'promote'
@@ -12,10 +12,9 @@ Ece517proj1::Application.routes.draw do
   match '/unlike', controller: 'posts', action: 'unvote'
 
   match '/new_comment', controller: 'posts', action: 'new_comment'
-  match '/show_liked', controller: 'posts', action: 'show_liked'
+  match '/show_voted', controller: 'posts', action: 'show_voted'
 
-
-  resources :votes
+  match 'search', controller:'application', action: 'search'
 
   resources :sessions
 
@@ -24,6 +23,7 @@ Ece517proj1::Application.routes.draw do
   resources :posts
 
   resources :users
+
 
 
   # The priority is based upon order of creation:

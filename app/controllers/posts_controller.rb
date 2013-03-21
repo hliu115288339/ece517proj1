@@ -1,11 +1,11 @@
 class PostsController < ApplicationController
   include SessionsHelper
-
-  before_filter :correct_user,   only: [:edit, :destroy]
+  before_filter :signed_in_user, only: [:edit, :vote, :new, :create, :new_comment, :update, :unvote, :destroy]
+  before_filter :correct_user,   only: [:edit, :update, :destroy]
 
   #show all posts
   def index
-    @posts = Post.all
+    @posts = Post.all(:order => "updated_at DESC")
 
     respond_to do |format|
       format.html # index.html.erb
@@ -30,14 +30,21 @@ class PostsController < ApplicationController
     @post = Post.new
 
     respond_to do |format|
+      if Category.first.nil?
+        flash.now[:error] = 'No category exist please contact the admin'
+      end
       format.html # new.html.erb
       format.json { render json: @post }
     end
   end
 
   def new_comment
-    @post = Post.find(params[:id])
-    @comment = @post.comments.build
+    parent_post = Post.find(params[:id])
+    @post = parent_post.comments.build
+
+    @post.title = 're: '+ parent_post.title
+    @post.category_id = parent_post.category_id
+    @post.parent_post_id = parent_post.id
 
     respond_to do |format|
       format.html # new.html.erb
@@ -51,12 +58,17 @@ class PostsController < ApplicationController
 
     respond_to do |format|
       if @post.save
-        touch_updated_at(@post)
+        @root_post.touch(:updated_at)
         format.html { redirect_to @post, notice: 'Post was successfully created.' }
         format.json { render json: @post, status: :created, location: @post }
       else
-        format.html { render action: "new" }
-        format.json { render json: @post.errors, status: :unprocessable_entity }
+        if @post.parent_post_id.nil?
+          format.html { render action: "new" }
+          format.json { render json: @post.errors, status: :unprocessable_entity }
+        else
+          format.html { render action: "new_comment" }
+          format.json { render json: @post.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
@@ -77,7 +89,9 @@ class PostsController < ApplicationController
 
     respond_to do |format|
       if @post.update_attributes(params[:post])
-        touch_updated_at(@post)
+        @root_post.touch(:updated_at)
+        update_child_posts(@post)
+
         format.html { redirect_to @post, notice: 'Post was successfully updated.' }
         format.json { head :no_content }
       else
@@ -132,7 +146,7 @@ class PostsController < ApplicationController
     end
   end
 
-  def show_liked
+  def show_voted
     @post = Post.find(params[:id])
   end
 
@@ -145,12 +159,18 @@ class PostsController < ApplicationController
     end
 
     def touch_updated_at(post)
-        current_post = post
-        current_post.touch(:updated_at)
-        while !current_post.parent_post_id.nil? do
-          current_post = Post.find_by_id(current_post.parent_post_id)
-          current_post.touch(:updated_at)
+        root_post = root_post_of(post)
+        root_post.touch(:updated_at)
+    end
+
+    def update_child_posts(post)
+      if !post.comments.empty?
+        post.comments.each do |comment|
+           comment.update_attribute(:title, 're: '+post.title)
+           comment.update_attribute(:category, post.category)
+           update_child_posts(comment)
         end
+      end
     end
 
     def root_post_of(post)

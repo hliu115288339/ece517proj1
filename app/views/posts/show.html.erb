@@ -1,51 +1,30 @@
-<table>
-  <tr>
-    <th width="20%"></th>
-    <th width="80%"></th>
-  </tr>
+<% provide(:title, "Posts | #{@post.title}") %>
 
-  <tr>
-    <td>
-      <div>
-        <h4><%= link_to @post.user.username, @post.user %></h4>
-      </div>
+<p>
+  <%= render 'post' %>
+</p>
 
-      <div>
-        <%= render 'votes/vote_form', object: @post %>
-      </div>
+<p>
+  <% if !@post.comments.empty? %>
+      <table width="100%">
+        <tr>
+          <th width="15%"></th>
+          <th width="85%"></th>
+        </tr>
 
-      <div><span class="timestamp"><small>
-          Posted <%= time_ago_in_words(@post.created_at) %> ago.
-      </small></span></div>
-    </td>
-
-    <td>
-      <div>
-        <h3><%= @post.title %></h3>
-      </div>
-
-      <div>
-        <%= @post.content %>
-      </div>
-
-      <div>
-        <% if signed_in? %>
-            <% if current_user?(@post.user) or current_user.admin? %>
-                <p>
-                  <%= link_to "Edit", edit_post_path(@post) %> |
-                  <%= link_to "Delete", @post, :confirm => 'Are you sure?', :method => :delete %>
-                </p>
-            <% end %>
+        <% @post.comments.all(:order => "created_at ASC").each do |post| %>
+          <tr>
+            <%= render 'comment', object: post%>
+          </tr>
         <% end %>
-      </div>
-    </td>
-  </tr>
-
-  <% @post.comments.each do |post| %>
-      <%= render 'post', object: post%>
+      </table>
   <% end %>
-</table>
+</p>
 
-
-  <%= button_to 'New Comment', {controller: 'posts', action: 'new_comment', id: @post.id}, class: "btn btn-small btn-primary" %>
-
+<p>
+  <% if signed_in? %>
+      <%= link_to 'New Comment',
+                    {controller: 'posts', action: 'new_comment', id: @post.id},
+                    class: "btn btn-large btn-primary"%>
+  <% end %>
+</p>

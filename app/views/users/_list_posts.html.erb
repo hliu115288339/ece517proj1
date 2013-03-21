@@ -1,0 +1,24 @@
+<% if @user.posts.first.nil? %>
+    No post
+<% else %>
+    <table>
+      <tr>
+        <th>Title</th>
+        <th>Category</th>
+        <th>Created at</th>
+      </tr>
+      <% @user.posts.all(:order => "created_at ASC").each do |post| %>
+          <tr>
+            <td><%= link_to post.title, post %></td>
+            <td><%= link_to post.category.name, post.category %></td>
+            <td><%= "#{time_ago_in_words post.created_at} ago"%></td>
+            <% if signed_in? %>
+              <% if current_user?(post.user) or current_user.admin? %>
+                <td><%= link_to 'Edit', edit_post_path(post) %></td>
+                <td><%= link_to 'Delete', post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+              <% end %>
+            <% end %>
+          </tr>
+      <% end %>
+    </table>
+<% end %>

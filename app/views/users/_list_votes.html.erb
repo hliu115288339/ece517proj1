@@ -1,0 +1,25 @@
+<% if @user.votes.first.nil? %>
+    No vote
+<% else %>
+    <table>
+      <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Category</th>
+        <th>Voted at</th>
+      </tr>
+      <% @user.votes.all(:order => "created_at ASC").each do |vote| %>
+          <tr>
+            <td><%= link_to vote.post.title, vote.post %></td>
+            <td><%= link_to vote.post.user.username, vote.post.user %></td>
+            <td><%= link_to vote.post.category.name, vote.post.category %></td>
+            <td><%= "#{time_ago_in_words vote.created_at} ago"%></td>
+            <% if signed_in? %>
+                <% if current_user?(vote.user) %>
+                    <td><%= link_to 'unvote', {controller: 'posts', action: 'unvote', id: vote.post.id} %></td>
+                <% end %>
+            <% end %>
+          </tr>
+      <% end %>
+    </table>
+<% end %>

@@ -1,0 +1,57 @@
+<h1>Search Result</h1>
+<% if @search_by == 'all' %>
+    <p>
+        <h3> Search by Post Content </h3>
+        <% if @posts.empty? %>
+            <h4><%= "No post with matching content" %></h4>
+        <% else %>
+            <%= render 'posts/search_result' %>
+        <% end %>
+    </p>
+
+    <p>
+        <h3>Search by Category Name:</h3>
+        <% if @categories.empty? %>
+            <h4><%= "No category with matching category name" %></h4>
+        <% else %>
+            <%= render 'categories/search_result' %>
+        <% end %>
+    </p>
+
+
+    <p>
+        <h3> Search by Username: </h3>
+        <% if @users.empty? %>
+            <h4><%= "No user with matching username" %></h4>
+        <% else %>
+            <%= render 'users/search_result' %>
+        <% end %>
+    </p>
+<% elsif @search_by == 'username' %>
+    <p>
+    <h3> Search by Username: </h3>
+    <% if @users.empty? %>
+        <h4><%= "No user with matching username" %></h4>
+    <% else %>
+        <%= render 'users/search_result' %>
+    <% end %>
+    </p>
+<% elsif @search_by == 'post' %>
+    <p>
+    <h3> Search by Post Content </h3>
+    <% if @posts.empty? %>
+        <h4><%= "No post with matching content" %></h4>
+    <% else %>
+        <%= render 'posts/search_result' %>
+    <% end %>
+    </p>
+<% elsif @search_by == 'category' %>
+    <p>
+    <h3>Search by Category Name:</h3>
+    <% if @categories.empty? %>
+        <h4><%= "No category with matching category name" %></h4>
+    <% else %>
+        <%= render 'categories/search_result' %>
+    <% end %>
+    </p>
+<% end %>

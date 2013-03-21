@@ -1,16 +1,5 @@
-<%= form_for(@comment) do |f| %>
+<% provide(:title, "New Comment") %>
 
-    <% @comment.title = 're:'+@post.title %>
-    <% @comment.parent_post_id = @post.id %>
-    <% @comment.category_id = @post.category_id %>
+<h1><%= @post.title %></h1>
 
-    <%=  f.hidden_field :title %>
-    <%=  f.hidden_field :category_id %>
-    <%=  f.hidden_field :parent_post_id %>
-
-    <h3><%= @comment.title %></h3>
-    <%= f.text_area :content %>
-    <%= f.submit "Create Comment", class: "btn btn-large btn-primary" %>
-
-<% end %>
-
+<%= render 'comment_form' %>

@@ -1,42 +1,45 @@
+<h1><%= @post.title %></h1>
+
+<table width="100%">
   <tr>
-    <td>
-      <div>
-        <h4><%= link_to object.user.username, object.user %></h4>
-      </div>
-
-      <%= render 'votes/vote_form', object: object %>
-      <span class="timestamp"><small>
-        Posted <%= time_ago_in_words(object.created_at) %> ago.
-      </small></span>
-
-    </td>
-    <td>
-      <h3><%= object.title %></h3>
-      <%= object.content %><br />
-      <% if signed_in? %>
-          <% if current_user?(object.user) or current_user.admin? %>
-              <p>
-                <%= link_to "Edit", edit_post_path(object) %> |
-                <%= link_to "Delete", object, :confirm => 'Are you sure?', :method => :delete %>
-              </p>
-          <% end %>
-      <% end %>
-      <% if !object.comments.empty? %>
-          <table width="100%">
-            <tr>
-              <th width="20%"></th>
-              <th width="80%"></th>
-            </tr>
-
-            <% object.comments.each do |post| %>
-              <%= render 'post', object: post%>
-            <% end %>
-          </table>
-      <% end %>
-
-      <%= button_to 'New Comment', {controller: 'posts', action: 'new_comment', id: object.id}, class: "btn btn-small btn-primary" %>
-
-    </td>
+    <th width="15%"></th>
+    <th width="85%"></th>
   </tr>
 
+  <tr>
+    <td>
+      <p>
+        <h4>
+          <%= link_to @post.user.username, @post.user %>
+        </h4>
+      </p>
 
+
+      <p>
+        <%= render 'vote_form', object: @post %>
+      </p>
+
+    </td>
+
+    <td>
+      <p>
+        <%= @post.content %>
+      </p>
+
+      <p class="timestamp">
+        <small>
+          <%= "Posted #{time_ago_in_words(@post.created_at)} ago" %>
+        </small>
+      </p>
+
+      <% if signed_in? %>
+        <% if current_user?(@post.user) or current_user.admin? %>
+          <p>
+            <%= link_to "Edit", edit_post_path(@post) %> |
+            <%= link_to "Delete", @post, :confirm => 'Are you sure?', :method => :delete %>
+          </p>
+        <% end %>
+      <% end %>
+    </td>
+  </tr>
+</table>

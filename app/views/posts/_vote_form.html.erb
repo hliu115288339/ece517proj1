@@ -1,0 +1,21 @@
+<div id="vote_form">
+  <% if signed_in? %>
+      <% if current_user?(object.user) %>
+          <%= link_to "#{object.votes.count} people voted",
+                {controller: 'posts', action: 'show_voted', id: object.id} %>
+      <% else %>
+          <% if current_user.voted?(object) %>
+              <%= link_to "you and #{object.votes.count-1} other people voted",
+                  {controller: 'posts', action: 'show_voted', id: object.id} %>
+              <p><%= link_to 'unvote', {controller: 'posts', action: 'unvote', id: object.id}, class: "btn btn-small btn-primary" %></p>
+          <% else %>
+              <%= link_to "#{object.votes.count} people voted",
+                          {controller: 'posts', action: 'show_voted', id: object.id} %>
+              <p><%= link_to 'vote', {controller: 'posts', action: 'vote', id: object.id}, class: "btn btn-small btn-primary"%></p>
+          <% end %>
+      <% end %>
+  <% else %>
+      <%= link_to "#{object.votes.count} people voted",
+                  {controller: 'posts', action: 'show_voted', id: object.id} %><br />
+  <% end %>
+</div>

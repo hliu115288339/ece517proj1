@@ -1,0 +1,15 @@
+<%= form_tag search_path, :method => 'get' do |f| %>
+    <ul class="nav pull-left">
+      <li><font color=white>Search by</font></li>
+      <li>
+         <%= select_tag(:search_by,
+                        options_for_select(
+                                [['all', 'all'],
+                                 ['username', 'username'],
+                                 ['post content', 'post'],
+                                 ['category name', 'category']])) %>
+      </li>
+      <li><%= text_field_tag :search, params[:search] %></li>
+      <li><%= submit_tag "Search", :name => nil , class: "btn btn-small btn-primary"%></li>
+    </ul>
+<% end %>

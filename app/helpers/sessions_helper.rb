@@ -37,9 +37,10 @@ module SessionsHelper
 
   def signed_in_user
     if !signed_in?
-      redirect_to login_path, notice: "Please sign in first."
+      redirect_to signin_path, notice: "Please sign in first."
     end
   end
+
 
   def admin_user
     if !current_user.admin?

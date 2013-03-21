@@ -1,11 +1,25 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
-  username: MyString
-  email: MyString
-  password: MyString
+  username: admin
+  email: MyStringkj@gamil.com
+  password_digest: MyStrinddg
+  admin: true
+
 
 two:
-  username: MyString
-  email: MyString
-  password: MyString
+  username: MyString2
+  email: MyString@gmail.com
+  password_digest: MySsdtring
+
+travis:
+  username: twfolsom1
+  email: twfolsom1@gmail.com
+  password_digest: 111111
+
+<% 1.upto(1000) do |i| %>
+fix_<%= i %>:
+  username: username<%= i%>
+  email: email<%= i%>@gmail.com
+  password_digest: password<%= i%>
+<% end %>

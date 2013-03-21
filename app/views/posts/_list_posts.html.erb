@@ -1,0 +1,33 @@
+<% if @posts.first.nil? %>
+    No post<br/>
+<% else %>
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Author</th>
+    <th>Category</th>
+    <th>Created at</th>
+    <th>Latest activity</th>
+  </tr>
+
+  <% @posts.each do |post| %>
+      <% if post.parent_post_id.nil? %>
+          <tr>
+            <td><%= link_to post.title, post %></td>
+            <td><%= link_to post.user.username, post.user %></td>
+            <td><%= link_to post.category.name, post.category %></td>
+
+            <td><%= time_ago_in_words post.created_at %> ago.</td>
+            <td><%= time_ago_in_words post.updated_at %> ago.</td>
+
+            <% if signed_in? %>
+                <% if current_user?(post.user) || current_user.admin? %>
+                    <td><%= link_to 'Edit', edit_post_path(post) %></td>
+                    <td><%= link_to 'Delete', post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+                <% end %>
+            <% end %>
+          </tr>
+      <% end %>
+  <% end %>
+</table>
+<% end %>

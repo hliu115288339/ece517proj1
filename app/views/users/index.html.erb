@@ -1,8 +1,10 @@
-<% @page_title = "Listing all users" -%>
-<br>
+<% provide(:title, "Users") %>
 
-<h1>Listing all users</h1>
+<h1>Listing Users</h1>
 
+<% if @users.empty? %>
+  No user <br/>
+<% else %>
 <table>
   <tr>
     <th>Username</th>
@@ -43,14 +45,14 @@
         <% if signed_in? %>
             <% if current_user?(user) or current_user.admin? %>
                 <td><%= link_to 'Edit', edit_user_path(user) %></td>
-                <td><%= link_to 'Delete', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+                <td><%= link_to 'Delete', user, method: :delete, data: { confirm: 'Are you sure?' } unless current_user?(user) and current_user.admin?%></td>
             <% end %>
         <% end %>
       </tr>
   <% end %>
 </table>
 
-<br />
+<% end %>
 
 
 

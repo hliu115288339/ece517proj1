@@ -3,7 +3,23 @@
 one:
   title: MyString
   content: MyString
+  user_id: 3
+  category_id:  1
+  parent_post_id:
+
 
 two:
-  title: MyString
-  content: MyString
+  title: MyString1
+  content: MyString2
+  user_id: 3
+  category_id:  2
+  parent_post_id:
+
+<% 1.upto(1000) do |i| %>
+fix_<%= i %>:
+  title: aljsdflksdafljkeoifqewfjdslkjoisdjv<%= i %>
+  content: asdflkjdsflajksafl;ajsdflkjasdflkjasdflkajsdf;lkajsdf;lkajsdf;ljk<%= 1 %>
+  user_id: Mystring
+  category_id:  3
+  parent_post_id:
+<% end %>

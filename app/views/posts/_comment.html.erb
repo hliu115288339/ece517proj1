@@ -1,0 +1,60 @@
+<td>
+  <p>
+    <h4>
+      <%= link_to object.user.username, object.user %>
+    </h4>
+  </p>
+
+  <p>
+    <%= render 'vote_form', object: object %>
+  </p>
+
+</td>
+
+<td>
+  <p>
+    <h4>
+      <%= object.title %>
+    </h4>
+  </p>
+
+  <p>
+    <%= object.content %>
+  </p>
+
+  <p class="timestamp">
+    <small>
+      <%= "Posted #{time_ago_in_words(object.created_at)} ago" %>
+    </small>
+  </p>
+
+  <% if signed_in? %>
+    <% if current_user?(object.user) or current_user.admin? %>
+      <p>
+        <%= link_to "Edit", edit_post_path(object) %> |
+        <%= link_to "Delete", object, :confirm => 'Are you sure?', :method => :delete %>
+      </p>
+    <% end %>
+  <% end %>
+
+  <% if !object.comments.empty? %>
+      <table width="100%">
+        <tr>
+          <th width="15%"></th>
+          <th width="85%"></th>
+        </tr>
+        <% object.comments.all(:order => "created_at ASC").each do |post| %>
+          <tr>
+            <%= render 'comment', object: post%>
+          </tr>
+        <% end %>
+      </table>
+  <% end %>
+
+  <% if signed_in? %>
+    <%= link_to 'New Comment', {controller: 'posts', action: 'new_comment', id: object.id}%>
+  <% end %>
+</td>
+
+
+
